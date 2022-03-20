@@ -1,6 +1,8 @@
-程序任务：实现LSB隐写，并对隐写后的图片进行RS分析
+运行环境：Windows
+
+主要功能：实现LSB隐写，并对隐写后的图片进行RS分析
 
 语言：Python
 
-主要函数库：NumPy、PIL
+用到的库：NumPy、PIL
 
