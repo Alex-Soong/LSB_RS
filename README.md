@@ -6,3 +6,9 @@
 
 用到的库：NumPy、PIL
 
+
+
+color2grey.py：将彩色的bmp图像转为灰度图
+
+LSBWrite.py：将二进制信息以LSB方式写入bmp图像
+
