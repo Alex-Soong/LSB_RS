@@ -4,18 +4,20 @@ import bitstring as bs
 import sys, os
 
 # fileName = "2333_grey_written.bmp"
-def LSBRead(fileName="2333_grey_written.bmp", bitNum=0):
+def LSBRead(fileName="2333_grey_written.bmp", readLength=-1):
 
     ret = ""        
     im0 = Image.open(fileName)
     x = np.array(im0)
 
-    if bitNum == 0:
-        fSize = x.ravel().shape[0]
+    fSize = x.ravel().shape[0]
+    
+    if readLength == -1:
+        length = fSize
     else:
-        fSize = bitNum
+        length = readLength if readLength < fSize else fSize
 
-    for i in range(fSize):
+    for i in range(length):
         t = x.ravel()[i] % 2
         ret = ret + str(t)
 
