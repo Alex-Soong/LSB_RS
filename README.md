@@ -4,7 +4,7 @@
 
 语言：Python
 
-用到的库：NumPy、PIL
+主要用到的库：NumPy、PIL、bitstring
 
 
 
