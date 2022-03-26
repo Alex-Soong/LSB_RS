@@ -25,6 +25,8 @@ def write(fileName, infotoWrite):
     im1 = Image.fromarray(x)
     im1.save(fileName[:-4] + "_written.bmp")
 
+    return (infoSize, fSize)
+
 
 def getBitStr(fileName):
     f = open(fileName, "rb")
