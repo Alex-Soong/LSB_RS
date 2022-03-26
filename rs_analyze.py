@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 # 计算单个8*8图像块的像素相关度
 def calcuRelate(_block):
@@ -23,6 +24,30 @@ def calcuRelate(_block):
     return res
 
 
-b = np.arange(64).reshape(8, 8)
-print(b)
-print(calcuRelate(b))
+# 将矩阵分割为若干小块(默认8*8) 
+def matrixCut(A, edgeLen=8):
+    m = A.shape[0] // edgeLen
+    n = A.shape[1] // edgeLen
+    res = A[:edgeLen * m][:edgeLen * n]
+    shape = (m, n, edgeLen, edgeLen)
+    strides = res.itemsize * np.array([n * edgeLen ** 2, edgeLen, n * edgeLen, 1])
+    res = np.lib.stride_tricks.as_strided(res, shape=shape, strides=strides)
+    res = res.reshape(m * n, edgeLen, edgeLen)
+    return res 
+
+
+if __name__ == '__main__':
+    
+    # if len(sys.argv) > 2:
+    #     inputFileName0 = sys.argv[1]
+    #     inputFileName1 = sys.argv[2]
+    b = np.arange(256).reshape(16, 16)
+    # shape = (2, 2, 8, 8)
+    
+    # strides = b.itemsize * np.array([128, 8, 16, 1])
+    # b = np.lib.stride_tricks.as_strided(b, shape=shape, strides=strides) 
+    # b = b.reshape(4, 8, 8)
+    b = matrixCut(b)
+    print(b)
+    print(calcuRelate(b[0]))
+    

@@ -10,7 +10,7 @@ def LSBReplace(_value, _bit):
     return _value
 
 
-def write(fileName, infotoWrite):
+def write(fileName, infotoWrite, _label=""):
     im0 = Image.open(fileName)
     x = np.array(im0)
 
@@ -23,7 +23,7 @@ def write(fileName, infotoWrite):
         print(i, end=" ")
 
     im1 = Image.fromarray(x)
-    im1.save(fileName[:-4] + "_written.bmp")
+    im1.save(fileName[:-4] + "_written" + _label + ".bmp")
 
     return (infoSize, fSize)
 
