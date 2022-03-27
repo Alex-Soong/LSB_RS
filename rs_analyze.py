@@ -1,3 +1,4 @@
+from cProfile import label
 import random
 import numpy as np
 import matplotlib.pyplot as plt
@@ -90,12 +91,13 @@ def calcuRmSmR_mS_m(matr):
 
 def draw4Lines(x, y1, y2, y3, y4, figureNo):
     plt.figure(figureNo)
-    plt.plot(x, y1)
-    plt.plot(x, y2)
-    plt.plot(x, y3)
-    plt.plot(x, y4)
-    plt.xlabel("隐写率")
+    plt.plot(x, y1, label="$R_{m}$")
+    plt.plot(x, y2, label="$S_{m}$")
+    plt.plot(x, y3, label="$R_{-m}$")
+    plt.plot(x, y4, label="$S_{-m}$")
+    plt.xlabel("Ratio")
     plt.ylabel("Value")
+    plt.legend()
     plt.title("$R_{m}$, $S_{m}$, $R_{-m}$, $S_{-m}$")
     
 
@@ -110,7 +112,7 @@ if __name__ == '__main__':
     fileName = "123_grey.bmp"
     im0 = Image.open(fileName)
     x0 = np.array(im0)
-    # print(calcuRmSmR_mS_m(x0))
+    print(calcuRmSmR_mS_m(x0))
     Rp, Sp, Rn, Sn = calcuRmSmR_mS_m(x0)
     Rps.append(Rp)
     Sps.append(Sp)
@@ -127,7 +129,7 @@ if __name__ == '__main__':
         Rns.append(Rn)
         Sns.append(Sn)
     
-    plt.close("all")
+    plt.close('all')
     draw4Lines(ratio, Rps, Sps, Rns, Sns, 1)
     plt.show()
     
