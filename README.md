@@ -16,7 +16,7 @@ color2grey.py：将彩色的bmp图像转为灰度图
 
 LSBWrite.py：将二进制信息以LSB方式写入bmp图像
 
-命令：py .\LSBWrite.py [file1] [file2]     // 将file2以二进制形式，LSB隐写至file1
+命令：py .\LSBWrite.py [file]     // 将m1.zip ~ m5.zip分别写入file，生成5个副本
 
 
 

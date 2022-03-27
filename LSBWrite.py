@@ -32,13 +32,26 @@ def getBitStr(fileName):
     str = bs.BitArray(str).bin
     return str
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    if len(sys.argv) > 2:
-        inputFileName0 = sys.argv[1]
-        inputFileName1 = sys.argv[2]
+#     if len(sys.argv) > 2:
+#         inputFileName0 = sys.argv[1]
+#         inputFileName1 = sys.argv[2]
+#     else:
+#         print("未指定文件名")
+#         os._exit(0)
+#     bits = getBitStr(inputFileName1)
+#     write(inputFileName0, bits)
+
+if __name__ == '__main__':
+    
+    if len(sys.argv) > 1:
+        fileName =sys.argv[1]
     else:
         print("未指定文件名")
         os._exit(0)
-    bits = getBitStr(inputFileName1)
-    write(inputFileName0, bits)
+    for i in range(5):
+        bits = getBitStr("m" + str(i+1) + ".zip")
+        write(fileName, bits, _label=str(i+1))
+    
+    

@@ -1,16 +1,20 @@
 import random
 import numpy as np
+import matplotlib.pyplot as plt
 from PIL import Image
+
 import sys
+
 
 # 计算单个8*8图像块的像素相关度
 def calcuRelate(_block, size=8):
 
-    pre = int(_block[0][0])
+    pre = _block[0][0]
     x = 0
     y = 0
     res = 0
-    for i in range(size*size):
+    for i in range(1, size*size):
+        pre = int(pre)
         res += abs(int(_block[x][y]) - pre)
         pre = _block[x][y]
         if (x == 0 or x == 7) and y % 2 == 0:
@@ -84,18 +88,49 @@ def calcuRmSmR_mS_m(matr):
     return r1/blockNum, s1/blockNum, r2/blockNum, s2/blockNum
 
 
+def draw4Lines(x, y1, y2, y3, y4, figureNo):
+    plt.figure(figureNo)
+    plt.plot(x, y1)
+    plt.plot(x, y2)
+    plt.plot(x, y3)
+    plt.plot(x, y4)
+    plt.xlabel("隐写率")
+    plt.ylabel("Value")
+    plt.title("$R_{m}$, $S_{m}$, $R_{-m}$, $S_{-m}$")
+    
+
 if __name__ == '__main__':
+    
+    ratio = [0, 0.1, 0.25, 0.5, 0.75, 1]   # 隐写率
+    Rps = []   # 四个列表，分别存放Rm、Sm、R_m、S_m的值
+    Sps = []
+    Rns = []
+    Sns = []
     
     fileName = "123_grey.bmp"
     im0 = Image.open(fileName)
     x0 = np.array(im0)
+    # print(calcuRmSmR_mS_m(x0))
+    Rp, Sp, Rn, Sn = calcuRmSmR_mS_m(x0)
+    Rps.append(Rp)
+    Sps.append(Sp)
+    Rns.append(Rn)
+    Sns.append(Sn)
+    for i in range(1, 5 + 1):
+        fileName = "123_grey_written"+ str(i) + ".bmp"
+        im1 = Image.open(fileName)
+        x1 = np.array(im1)
+        print(calcuRmSmR_mS_m(x1))
+        Rp, Sp, Rn, Sn = calcuRmSmR_mS_m(x1)
+        Rps.append(Rp)
+        Sps.append(Sp)
+        Rns.append(Rn)
+        Sns.append(Sn)
     
-    fileName = "123_grey_written.bmp"
-    im1 = Image.open(fileName)
-    x1 = np.array(im1)
-
-    print(calcuRmSmR_mS_m(x0))
-    print(calcuRmSmR_mS_m(x1))
+    plt.close("all")
+    draw4Lines(ratio, Rps, Sps, Rns, Sns, 1)
+    plt.show()
+    
     
     # if len(sys.argv) > 2:
     #     inputFileName0 = sys.argv[1]
