@@ -1,5 +1,4 @@
 from cProfile import label
-from os import terminal_size
 import random
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,15 +14,15 @@ def calcuRelate(_block, size=8):
     x = 0
     y = 0
     res = 0
-    for i in range(1, size*size):
+    for i in range(1, size*size):   # Z字型遍历数组
         pre = int(pre)
         res += abs(int(_block[x][y]) - pre)
         pre = _block[x][y]
-        if (x == 0 or x == 7) and y % 2 == 0:
+        if (x == 0 or x == 7) and y % 2 == 0:   # 若处于顶边且列指标为偶数，右移一格
             y += 1
-        elif (y == 0 or y == 7) and x % 2 == 1:
+        elif (y == 0 or y == 7) and x % 2 == 1:  # 处于左边且行指标奇数  下移
             x += 1
-        elif (x + y) % 2 == 1:
+        elif (x + y) % 2 == 1:   # 根据横纵坐标之和的奇偶性，确定方向
             x += 1
             y -= 1
         else:
@@ -54,13 +53,10 @@ def model(ratio=0.5):
         ls.append(True)
     for i in range(64 - t):
         ls.append(False)
-    random.shuffle(ls)
+    random.shuffle(ls)    # 打乱列表元素顺序
     res = np.array(ls).reshape(8, 8)
          
     return res
-
-
-
 
 
 # 正或负翻转   _ratio为翻转的比例
