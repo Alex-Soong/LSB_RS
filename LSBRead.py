@@ -4,7 +4,7 @@ import bitstring as bs
 import sys, os
 
 # fileName = "2333_grey_written.bmp"
-def LSBRead(fileName="2333_grey_written.bmp", readLength=-1):
+def LSBRead(fileName="123_grey_written.bmp", readLength=-1):
 
     ret = ""        
     im0 = Image.open(fileName)

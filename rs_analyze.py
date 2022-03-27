@@ -1,4 +1,5 @@
 from cProfile import label
+from os import terminal_size
 import random
 import numpy as np
 import matplotlib.pyplot as plt
@@ -44,28 +45,50 @@ def matrixCut(A, edgeLen=8):
     return res 
 
 
+# 生成一个随机8*8的布尔矩阵，用作正负翻转的模式块
+def model(ratio=0.5):
+
+    ls = []
+    t = int(ratio*64)
+    for i in range(t):
+        ls.append(True)
+    for i in range(64 - t):
+        ls.append(False)
+    random.shuffle(ls)
+    res = np.array(ls).reshape(8, 8)
+         
+    return res
+
+
+
+
+
 # 正或负翻转   _ratio为翻转的比例
-def turn(matr, nonPositive=True, _ratio=0.5):
+def turn(matr, model, nonPositive=True):
 
     m = matr.shape[0]
     n = matr.shape[1]
-    
+
     res = np.empty((m, n), dtype=int)
     for i in range(m):
         for j in range(n):
-            t = matr[i][j]
-            k = random.random()  # 随机生成[0, 1)区间的浮点数
-            if k < _ratio:
-                if nonPositive:
+            t = int(matr[i][j])
+            k = model[i][j]
+            if k == True:
+                if nonPositive and t > 0 and t < 255:  # 非正翻转
                     res[i][j] = t + 2 * (t % 2) - 1
-                else:
+                elif nonPositive == False:     # 非负翻转
                     res[i][j] = t - 2 * (t % 2) + 1
-
+                else:
+                    res[i][j] = t
+            else:
+                res[i][j] = t
+ 
     return res
 
 
 # 计算Rm、R_m、Sm和S_m值
-def calcuRmSmR_mS_m(matr):
+def calcuRmSmR_mS_m(matr, model):
 
     blocks = matrixCut(matr)
     blockNum = blocks.shape[0]      # 图像块的个数 
@@ -75,8 +98,8 @@ def calcuRmSmR_mS_m(matr):
     s2 = 0     # S_m
     for i in range(blockNum):
         rela0 = calcuRelate(blocks[i])
-        rela1 = calcuRelate(turn(blocks[i], nonPositive=True))
-        rela2 = calcuRelate(turn(blocks[i], nonPositive=False))
+        rela1 = calcuRelate(turn(blocks[i], model, nonPositive=True))
+        rela2 = calcuRelate(turn(blocks[i], model, nonPositive=False))
         if rela1 > rela0:
             r1 += 1
         elif rela1 < rela0:
@@ -103,17 +126,18 @@ def draw4Lines(x, y1, y2, y3, y4, figureNo):
 
 if __name__ == '__main__':
     
-    ratio = [0, 0.1, 0.25, 0.5, 0.75, 1]   # 隐写率
+    ratios = [0, 0.1, 0.25, 0.5, 0.75, 1]   # 隐写率
     Rps = []   # 四个列表，分别存放Rm、Sm、R_m、S_m的值
     Sps = []
     Rns = []
     Sns = []
+    model = model()
     
     fileName = "123_grey.bmp"
     im0 = Image.open(fileName)
     x0 = np.array(im0)
-    print(calcuRmSmR_mS_m(x0))
-    Rp, Sp, Rn, Sn = calcuRmSmR_mS_m(x0)
+    Rp, Sp, Rn, Sn = calcuRmSmR_mS_m(x0, model)
+    print(Rp, Sp, Rn, Sn)
     Rps.append(Rp)
     Sps.append(Sp)
     Rns.append(Rn)
@@ -122,17 +146,18 @@ if __name__ == '__main__':
         fileName = "123_grey_written"+ str(i) + ".bmp"
         im1 = Image.open(fileName)
         x1 = np.array(im1)
-        print(calcuRmSmR_mS_m(x1))
-        Rp, Sp, Rn, Sn = calcuRmSmR_mS_m(x1)
+        Rp, Sp, Rn, Sn = calcuRmSmR_mS_m(x1, model)
+        print(Rp, Sp, Rn, Sn)
         Rps.append(Rp)
         Sps.append(Sp)
         Rns.append(Rn)
         Sns.append(Sn)
     
     plt.close('all')
-    draw4Lines(ratio, Rps, Sps, Rns, Sns, 1)
+    draw4Lines(ratios, Rps, Sps, Rns, Sns, 1)
     plt.show()
     
+    print(model)
     
     # if len(sys.argv) > 2:
     #     inputFileName0 = sys.argv[1]
