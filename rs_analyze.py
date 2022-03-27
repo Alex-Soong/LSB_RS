@@ -1,17 +1,17 @@
 import random
 import numpy as np
+from PIL import Image
 import sys
 
 # 计算单个8*8图像块的像素相关度
-def calcuRelate(_block):
+def calcuRelate(_block, size=8):
 
-    size = 8
-    pre = _block[0][0]
+    pre = int(_block[0][0])
     x = 0
     y = 0
     res = 0
     for i in range(size*size):
-        res += abs(_block[x][y] - pre)
+        res += abs(int(_block[x][y]) - pre)
         pre = _block[x][y]
         if (x == 0 or x == 7) and y % 2 == 0:
             y += 1
@@ -64,10 +64,10 @@ def calcuRmSmR_mS_m(matr):
 
     blocks = matrixCut(matr)
     blockNum = blocks.shape[0]      # 图像块的个数 
-    r1 = 0
-    r2 = 0
-    s1 = 0
-    s2 = 0
+    r1 = 0     # Rm
+    s1 = 0     # Sm
+    r2 = 0     # R_m
+    s2 = 0     # S_m
     for i in range(blockNum):
         rela0 = calcuRelate(blocks[i])
         rela1 = calcuRelate(turn(blocks[i], nonPositive=True))
@@ -81,21 +81,32 @@ def calcuRmSmR_mS_m(matr):
         elif rela2 < rela0:
             s2 += 1
     
-    return r1/blockNum, r2/blockNum, s1/blockNum, s2/blockNum
+    return r1/blockNum, s1/blockNum, r2/blockNum, s2/blockNum
 
 
 if __name__ == '__main__':
     
+    fileName = "123_grey.bmp"
+    im0 = Image.open(fileName)
+    x0 = np.array(im0)
+    
+    fileName = "123_grey_written.bmp"
+    im1 = Image.open(fileName)
+    x1 = np.array(im1)
+
+    print(calcuRmSmR_mS_m(x0))
+    print(calcuRmSmR_mS_m(x1))
+    
     # if len(sys.argv) > 2:
     #     inputFileName0 = sys.argv[1]
     #     inputFileName1 = sys.argv[2]
-    b = np.arange(256).reshape(16, 16)
+    # b = np.arange(256).reshape(16, 16)
     # shape = (2, 2, 8, 8)
     
     # strides = b.itemsize * np.array([128, 8, 16, 1])
     # b = np.lib.stride_tricks.as_strided(b, shape=shape, strides=strides) 
     # b = b.reshape(4, 8, 8)
-    b = matrixCut(b)
-    print(b)
-    print(calcuRelate(b[0]))
+    # b = matrixCut(b)
+    # print(b)
+    # print(calcuRelate(b[0]))
     

@@ -17,10 +17,8 @@ def write(fileName, infotoWrite, _label=""):
     fSize = x.ravel().shape[0]
     infoSize = len(infotoWrite)
     length = fSize if fSize < infoSize else infoSize
-    print(length)
     for i in range(length):
         x.ravel()[i] = LSBReplace(x.ravel()[i], int(infotoWrite[i]))
-        print(i, end=" ")
 
     im1 = Image.fromarray(x)
     im1.save(fileName[:-4] + "_written" + _label + ".bmp")
