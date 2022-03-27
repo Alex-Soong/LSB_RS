@@ -94,8 +94,8 @@ def calcuRmSmR_mS_m(matr, model):
     s2 = 0     # S_m
     for i in range(blockNum):
         rela0 = calcuRelate(blocks[i])
-        rela1 = calcuRelate(turn(blocks[i], model, nonPositive=True))
-        rela2 = calcuRelate(turn(blocks[i], model, nonPositive=False))
+        rela1 = calcuRelate(turn(blocks[i], model, nonPositive=False))
+        rela2 = calcuRelate(turn(blocks[i], model, nonPositive=True))
         if rela1 > rela0:
             r1 += 1
         elif rela1 < rela0:
@@ -127,7 +127,7 @@ if __name__ == '__main__':
     Sps = []
     Rns = []
     Sns = []
-    model = model()
+    model = model(0.5)
     
     fileName = "123_grey.bmp"
     im0 = Image.open(fileName)
@@ -153,7 +153,7 @@ if __name__ == '__main__':
     draw4Lines(ratios, Rps, Sps, Rns, Sns, 1)
     plt.show()
     
-    print(model)
+    # print(model)
     
     # if len(sys.argv) > 2:
     #     inputFileName0 = sys.argv[1]
