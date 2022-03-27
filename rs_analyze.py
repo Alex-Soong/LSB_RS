@@ -1,8 +1,10 @@
+import random
 import numpy as np
 import sys
 
 # 计算单个8*8图像块的像素相关度
 def calcuRelate(_block):
+
     size = 8
     pre = _block[0][0]
     x = 0
@@ -26,6 +28,7 @@ def calcuRelate(_block):
 
 # 将矩阵分割为若干小块(默认8*8) 
 def matrixCut(A, edgeLen=8):
+
     m = A.shape[0] // edgeLen
     n = A.shape[1] // edgeLen
     res = A[:edgeLen * m][:edgeLen * n]
@@ -34,6 +37,51 @@ def matrixCut(A, edgeLen=8):
     res = np.lib.stride_tricks.as_strided(res, shape=shape, strides=strides)
     res = res.reshape(m * n, edgeLen, edgeLen)
     return res 
+
+
+# 正或负翻转   _ratio为翻转的比例
+def turn(matr, nonPositive=True, _ratio=0.5):
+
+    m = matr.shape[0]
+    n = matr.shape[1]
+    
+    res = np.empty((m, n), dtype=int)
+    for i in range(m):
+        for j in range(n):
+            t = matr[i][j]
+            k = random.random()  # 随机生成[0, 1)区间的浮点数
+            if k < _ratio:
+                if nonPositive:
+                    res[i][j] = t + 2 * (t % 2) - 1
+                else:
+                    res[i][j] = t - 2 * (t % 2) + 1
+
+    return res
+
+
+# 计算Rm、R_m、Sm和S_m值
+def calcuRmSmR_mS_m(matr):
+
+    blocks = matrixCut(matr)
+    blockNum = blocks.shape[0]      # 图像块的个数 
+    r1 = 0
+    r2 = 0
+    s1 = 0
+    s2 = 0
+    for i in range(blockNum):
+        rela0 = calcuRelate(blocks[i])
+        rela1 = calcuRelate(turn(blocks[i], nonPositive=True))
+        rela2 = calcuRelate(turn(blocks[i], nonPositive=False))
+        if rela1 > rela0:
+            r1 += 1
+        elif rela1 < rela0:
+            s1 += 1
+        if rela2 > rela0:
+            r2 += 1
+        elif rela2 < rela0:
+            s2 += 1
+    
+    return r1/blockNum, r2/blockNum, s1/blockNum, s2/blockNum
 
 
 if __name__ == '__main__':
